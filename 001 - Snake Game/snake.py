@@ -210,34 +210,34 @@ class Jogo:
                     self.cobra.cresce()
                     self.pontos += 1
 
-    ##            if self.pos_x + tamanho > largura:
-    ##                self.pos_x = 0
-    ##            if self.pos_x < 0:
-    ##                self.pos_x=largura-tamanho
-    ##            if self.pos_y + tamanho > altura-placar:
-    ##                self.pos_y = 0
-    ##            if self.pos_y < 0:
-    ##                self.pos_y= altura-tamanho-placar
+                if self.pos_x + tamanho > largura:
+                    self.pos_x = 0
+                if self.pos_x < 0:
+                    self.pos_x=largura-tamanho
+                if self.pos_y + tamanho > altura-placar:
+                    self.pos_y = 0
+                if self.pos_y < 0:
+                    self.pos_y= altura-tamanho-placar
 
                 ''' Checa se a cobra ultrapassou alguma das bordas,
                 caso tenha ultrapassado é definido que não se está
                 mais jogando porque perdeu e é chamado o método "perdido" '''
-                if self.pos_x + tamanho > largura:
-                    self.jogando = False
-                    self.perdeu = True
-                    self.perdido()
-                if self.pos_x < 0:
-                    self.jogando = False
-                    self.perdeu = True
-                    self.perdido()
-                if self.pos_y + tamanho > altura:
-                    self.jogando = False
-                    self.perdeu = True
-                    self.perdido()
-                if self.pos_y < 0:
-                    self.jogando = False
-                    self.perdeu = True
-                    self.perdido()
+                # if self.pos_x + tamanho > largura:
+                #     self.jogando = False
+                #     self.perdeu = True
+                #     self.perdido()
+                # if self.pos_x < 0:
+                #     self.jogando = False
+                #     self.perdeu = True
+                #     self.perdido()
+                # if self.pos_y + tamanho > altura:
+                #     self.jogando = False
+                #     self.perdeu = True
+                #     self.perdido()
+                # if self.pos_y < 0:
+                #     self.jogando = False
+                #     self.perdeu = True
+                #     self.perdido()
 
                 ''' Move a cobra para a nova posição que é 
                 definida como parâmetro do método '''
