@@ -19,18 +19,18 @@ true = True
 grid = [[0,0,0,0,0,0,0,0,0,0],
         [0,0,0,0,0,0,1,1,0,0],
         [0,0,0,0,0,1,1,0,0,0],
-        [0,1,0,0,0,0,0,0,0,0],
-        [0,1,0,0,0,0,0,0,0,0],
-        [0,1,0,0,1,0,0,0,0,0],
-        [0,1,0,0,1,0,0,0,0,0],
-        [0,0,0,0,1,1,0,0,0,0],
-        [0,0,0,0,0,0,0,0,0,0],
-        [0,0,0,0,1,0,0,0,0,0],
-        [0,0,0,1,1,1,0,0,0,0],
         [0,0,0,0,0,0,0,0,0,0],
         [0,0,0,0,0,0,0,0,0,0],
-        [0,0,1,1,0,0,0,0,0,0],
-        [0,0,1,1,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0],
         [0,0,0,0,0,0,0,0,0,0]]
 
 while true:
@@ -41,6 +41,30 @@ while true:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 true = False
+            if event.key == pygame.K_UP:
+                for i in range(16):
+                    for j in range(10):
+                        if grid[i][j] == 1:
+                            grid[i][j] = 0
+                            grid[i][j-1] = 1
+            if event.key == pygame.K_DOWN:
+                for i in range(16):
+                    for j in range(10):
+                        if grid[i][j] == 1:
+                            grid[i][j] = 0
+                            grid[i][j+1] = 1
+            if event.key == pygame.K_LEFT:
+                for i in range(16):
+                    for j in range(10):
+                        if grid[i][j] == 1:
+                            grid[i][j] = 0
+                            grid[i-1][j] = 1
+            if event.key == pygame.K_RIGHT:
+                for i in range(16):
+                    for j in range(10):
+                        if grid[i][j] == 1:
+                            grid[i][j] = 0
+                            grid[i+1][j] = 1
     fundo.fill((0,0,0))
     for i in range(16):
         for j in range(10):
