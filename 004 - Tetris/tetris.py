@@ -31,25 +31,30 @@ def generate_random_piece():
     pos[0][1] = randrange(0, 10)
 
     piece[pos[0][0]][pos[0][1]] = 1
+    selected = False
+    while(not selected):
+        frst = randrange(0, 4)
 
-    frst = randrange(0, 4)
-
-    if frst == 0:
-        piece[pos[0][0]-1][pos[0][1]] = 1
-        pos[1][0] = pos[0][0]-1
-        pos[1][1] = pos[0][1]
-    elif frst == 1:
-        piece[pos[0][0]][pos[0][1]+1] = 1
-        pos[1][0] = pos[0][0]
-        pos[1][1] = pos[0][1]+1
-    elif frst == 2:
-        piece[pos[0][0]+1][pos[0][1]] = 1
-        pos[1][0] = pos[0][0]+1
-        pos[1][1] = pos[0][1]
-    else:
-        piece[pos[0][0]][pos[0][1]-1] = 1
-        pos[1][0] = pos[0][0]
-        pos[1][1] = pos[0][1]-1
+        if frst == 0 and pos[0][0]-1 >= 0:
+            piece[pos[0][0]-1][pos[0][1]] = 1
+            pos[1][0] = pos[0][0]-1
+            pos[1][1] = pos[0][1]
+            selected = True
+        elif frst == 1 and pos[0][1]+1 <= 9:
+            piece[pos[0][0]][pos[0][1]+1] = 1
+            pos[1][0] = pos[0][0]
+            pos[1][1] = pos[0][1]+1
+            selected = True
+        elif frst == 2 and pos[0][0]+1 <= 4:
+            piece[pos[0][0]+1][pos[0][1]] = 1
+            pos[1][0] = pos[0][0]+1
+            pos[1][1] = pos[0][1]
+            selected = True
+        elif frst == 3 and pos[0][1]-1 >=0:
+            piece[pos[0][0]][pos[0][1]-1] = 1
+            pos[1][0] = pos[0][0]
+            pos[1][1] = pos[0][1]-1
+            selected = True
 
     selected = False
     seletor = randrange(0, 2)
@@ -57,22 +62,22 @@ def generate_random_piece():
     while(not selected):
         scnd = randrange(0, 4)
 
-        if scnd == 0 and piece[pos[seletor][0]-1][pos[seletor][1]] != 1 and pos[seletor][0]-1 >= 0:
+        if pos[seletor][0]-1 >= 0 and scnd == 0 and piece[pos[seletor][0]-1][pos[seletor][1]] != 1:
             piece[pos[seletor][0]-1][pos[seletor][1]] = 1
             pos[2][0] = pos[seletor][0]-1
             pos[2][1] = pos[seletor][1]
             selected = True
-        elif scnd == 1 and piece[pos[seletor][0]][pos[seletor][1]+1] != 1 and pos[seletor][1]+1 <= 9:
+        elif pos[seletor][1]+1 <= 9 and scnd == 1 and piece[pos[seletor][0]][pos[seletor][1]+1] != 1:
             piece[pos[seletor][0]][pos[seletor][1]+1] = 1
             pos[2][0] = pos[seletor][0]
             pos[2][1] = pos[seletor][1]+1
             selected = True
-        elif scnd == 2 and piece[pos[seletor][0]+1][pos[seletor][1]] != 1 and pos[seletor][0]+1 <= 4:
+        elif pos[seletor][0]+1 <= 4 and scnd == 2 and piece[pos[seletor][0]+1][pos[seletor][1]] != 1:
             piece[pos[seletor][0]+1][pos[seletor][1]] = 1
             pos[2][0] = pos[seletor][0]+1
             pos[2][1] = pos[seletor][1]
             selected = True
-        elif scnd == 3 and piece[pos[seletor][0]][pos[seletor][1]-1] != 1 and pos[seletor][1]-1 >= 0:
+        elif pos[seletor][1]-1 >= 0 and scnd == 3 and piece[pos[seletor][0]][pos[seletor][1]-1] != 1:
             piece[pos[seletor][0]][pos[seletor][1]-1] = 1
             pos[2][0] = pos[seletor][0]
             pos[2][1] = pos[seletor][1]-1
@@ -84,22 +89,22 @@ def generate_random_piece():
     while(not selected):
         scnd = randrange(0, 4)
 
-        if scnd == 0 and piece[pos[seletor][0]-1][pos[seletor][1]] != 1 and pos[seletor][0]-1 >= 0:
+        if pos[seletor][0]-1 >= 0 and scnd == 0 and piece[pos[seletor][0]-1][pos[seletor][1]] != 1:
             piece[pos[seletor][0]-1][pos[seletor][1]] = 1
             pos[2][0] = pos[seletor][0]-1
             pos[2][1] = pos[seletor][1]
             selected = True
-        elif scnd == 1 and piece[pos[seletor][0]][pos[seletor][1]+1] != 1 and pos[seletor][1]+1 <= 9:
+        elif pos[seletor][1]+1 <= 9 and scnd == 1 and piece[pos[seletor][0]][pos[seletor][1]+1] != 1:
             piece[pos[seletor][0]][pos[seletor][1]+1] = 1
             pos[2][0] = pos[seletor][0]
             pos[2][1] = pos[seletor][1]+1
             selected = True
-        elif scnd == 2 and piece[pos[seletor][0]+1][pos[seletor][1]] != 1 and pos[seletor][0]+1 <= 15:
+        elif pos[seletor][0]+1 <= 4 and scnd == 2 and piece[pos[seletor][0]+1][pos[seletor][1]] != 1:
             piece[pos[seletor][0]+1][pos[seletor][1]] = 1
             pos[2][0] = pos[seletor][0]+1
             pos[2][1] = pos[seletor][1]
             selected = True
-        elif scnd == 3 and piece[pos[seletor][0]][pos[seletor][1]-1] != 1 and pos[seletor][1]-1 >= 0:
+        elif pos[seletor][1]-1 >= 0 and scnd == 3 and piece[pos[seletor][0]][pos[seletor][1]-1] != 1:
             piece[pos[seletor][0]][pos[seletor][1]-1] = 1
             pos[2][0] = pos[seletor][0]
             pos[2][1] = pos[seletor][1]-1
@@ -170,13 +175,13 @@ while true:
                 for x in range(1, 28):
                     for y in range(1, 28):
                         fundo.set_at((j*30+x, i*30+y), (0, 255, 255))
-        for i in range(15, 0, -1):
-            for j in range(9, 0, -1):
-                if i == 15 and grid[i][j] == 1:
-                    for i in range(16):
-                        for j in range(10):
-                            if grid[i][j] == 1:
-                                grid[i][j] = 2
+    for i in range(15, 0, -1):
+        for j in range(9, 0, -1):
+            if i == 15 and grid[i][j] == 1:
+                for x in range(16):
+                    for y in range(10):
+                        if grid[x][y] == 1:
+                            grid[x][y] = 2
     for i in range(15, 0, -1):
         for j in range(9, 0, -1):
             if grid[i][j] == 1:
@@ -184,6 +189,6 @@ while true:
                 grid[i+1][j] = 1
     
     pygame.display.update()
-    relogio.tick(5)
+    relogio.tick(30)
 
 pygame.quit()
