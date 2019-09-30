@@ -151,8 +151,8 @@ while true:
                             grid[i][j] = 0
                             grid[i-1][j] = 1
             if event.key == pygame.K_DOWN:
-                for i in range(15, 0, -1):
-                    for j in range(9, 0, -1):
+                for i in range(15, -1, -1):
+                    for j in range(9, -1, -1):
                         if grid[i][j] == 1:
                             grid[i][j] = 0
                             grid[i+1][j] = 1
@@ -163,7 +163,7 @@ while true:
                             grid[i][j] = 0
                             grid[i][j-1] = 1
             if event.key == pygame.K_RIGHT:
-                for j in range(9, 0, -1):
+                for j in range(9, -1, -1):
                     for i in range(16):
                         if grid[i][j] == 1:
                             grid[i][j] = 0
@@ -172,21 +172,21 @@ while true:
     for i in range(16):
         for j in range(10):
             if grid[i][j] == 1 or grid[i][j] == 2:
-                for x in range(1, 28):
-                    for y in range(1, 28):
+                for x in range(1, 29):
+                    for y in range(1, 29):
                         fundo.set_at((j*30+x, i*30+y), (0, 255, 255))
-    for i in range(15, 0, -1):
-        for j in range(9, 0, -1):
+    for i in range(15, -1, -1):
+        for j in range(9, -1, -1):
             if i == 15 and grid[i][j] == 1:
                 for x in range(16):
                     for y in range(10):
                         if grid[x][y] == 1:
                             grid[x][y] = 2
-    for i in range(15, 0, -1):
-        for j in range(9, 0, -1):
-            if grid[i][j] == 1:
-                grid[i][j] = 0
-                grid[i+1][j] = 1
+    # for i in range(15, -1, -1):
+    #     for j in range(9, -1, -1):
+    #         if grid[i][j] == 1:
+    #             grid[i][j] = 0
+    #             grid[i+1][j] = 1
     
     pygame.display.update()
     relogio.tick(30)
