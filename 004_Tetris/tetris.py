@@ -61,19 +61,28 @@ class Tetrimino:
         fundo.blit(self.piece, (self.x, self.y))
 
     def move(self, direcao):
-        if direcao == 'e':
+        if direcao == 'e' and self.x > 0:
             self.x -= 30
-        elif direcao == 'r':
+        elif direcao == 'r' and self.x < 300-self.piece.get_size()[0]-2:
             self.x += 30
         else:
             self.y += self.speed
+            if self.y + self.piece.get_size()[1] > 480:
+                self.y -= self.speed
 
     def rotaciona(self):
         self.piece = pygame.transform.rotate(self.piece, 90)
+        if(self.x + self.piece.get_size()[0] > 300):
+            self.piece = pygame.transform.rotate(self.piece, -90)
+        if(self.y + self.piece.get_size()[1] > 450):
+            self.piece = pygame.transform.rotate(self.piece, -90)
 
     def stop(self):
-        if self.y >390:
+        if self.y > 450 - self.piece.get_size()[1]:
             self.speed = 0
+            return True
+        else:
+            return False
 true = True
 blit = False
 atual = None
@@ -81,14 +90,14 @@ pos_y = 0
 pos_x = randrange(0, 180, 30)
 speed_y = 30
 piece = Tetrimino()
+pieces = []
 movido = False
 while true:
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 piece = Tetrimino()
-            if event.key == pygame.K_DOWN:
-                piece.move('')
+                print(piece.piece.get_size())
             if event.key == pygame.K_UP:
                 piece.rotaciona()
         if event.type == pygame.QUIT:
@@ -99,23 +108,35 @@ while true:
         pygame.draw.line(fundo, (0,0,0), (0,i*30),(largura,i*30))
     for i in range(11):
         pygame.draw.line(fundo, (0,0,0), (i*30,0),(i*30,altura-40))
-    
+    if pygame.key.get_pressed()[pygame.K_DOWN]:
+        piece.move('')
     if pygame.key.get_pressed()[pygame.K_LEFT]:
         piece.move('e')
-        pygame.display.update()
         movido = True
     if pygame.key.get_pressed()[pygame.K_RIGHT]:
         piece.move('r')
-        pygame.display.update()
         movido = True
     if not movido:
         piece.move('')
     piece.mostra()
-    piece.stop()
+    aux = piece.stop()
+    for item in pieces:
+        if item.piece.get_rect().colliderect(piece.piece.get_rect()):
+            print('Bateu')
+            piece.stop()
+            pieces.append(piece)
+            piece = Tetrimino()
+            break
+            
+    for item in pieces:    
+        item.mostra()
+    if aux:
+        pieces.append(piece)
+        piece = Tetrimino()
     pos_y += speed_y
     movido = False
     pygame.display.update()
-    relogio.tick(1)
-    #pygame.time.delay(50)
+    relogio.tick(60)
+    pygame.time.delay(200)
 
 pygame.quit()
