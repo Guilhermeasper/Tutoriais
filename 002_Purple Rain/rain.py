@@ -30,7 +30,7 @@ class Drop:
 
 true = True
 rain = []
-for i in range(2000):
+for i in range(4000):
     drop = Drop()
     rain.append(drop)
 counter = 0
