@@ -21,14 +21,15 @@ except:
 ''' Declaração das váriaveis globais que utilizaremos
 em todo o código, altura e largura da tela, tamanho da
 cobra e maçã, tamanho do placar e cores no formato RGB'''
-largura=320
-altura=280
-tamanho = 10
+largura=640
+altura=480
+tamanho = 20
 placar = 40
 branco=(255,255,255)
 preto=(0,0,0)
 vermelho=(255,0,0)
-verde=(0,255,0)
+verde=(0,200,0)
+verde_escuro=(0,150,0)
 azul=(0,0,255)
 prata=(192,192,192)
 laranja=(255,69,0)
@@ -88,8 +89,13 @@ class Cobra:
     ''' Método show, desenha cada pedaço da cobra
     na tela '''
     def show(self):
+        indice = 0
         for XY in self.cobra:
-            pygame.draw.rect(fundo, preto, [XY[0], XY[1], tamanho, tamanho])
+            if indice == len(self.cobra)-1:
+                pygame.draw.rect(fundo, verde_escuro, [XY[0], XY[1], tamanho, tamanho])
+            else:
+                pygame.draw.rect(fundo, verde, [XY[0], XY[1], tamanho, tamanho])
+            indice += 1
 
     ''' Método rastro, remove a cauda quando o
     tamanho do array é maior que o comprimento da
@@ -123,8 +129,8 @@ não recebe nenhum parâmetro, possui os atributos
 x e y que é a posição da maçã na tela '''
 class Maca:
     def __init__(self):
-        self.x = randrange(0,largura-tamanho,10)
-        self.y = randrange(0,altura-tamanho-placar,10)
+        self.x = randrange(0,largura-tamanho,20)
+        self.y = randrange(0,altura-tamanho-placar,20)
 
     ''' Método show, desenha a maçã na tela '''
     def show(self):
@@ -133,8 +139,8 @@ class Maca:
     ''' Método reposicionar, define novos x e y
     aleatórios para a maçã após ser comida pela cobra '''
     def reposicionar(self):
-        self.x = randrange(0,largura-tamanho,10)
-        self.y = randrange(0,altura-tamanho-placar,10)
+        self.x = randrange(0,largura-tamanho,20)
+        self.y = randrange(0,altura-tamanho-placar,20)
 
 ''' Classe Jogo, definirá todo o restante do jogo, 
 como variaveis de controle para continuar jogando,
@@ -144,9 +150,12 @@ class Jogo:
     def __init__(self):
         self.jogando = True
         self.perdeu = False
+        self.noMenu = True
+        self.modo = None
+        self.fundo = branco
         
-        self.pos_x=randrange(0,largura-tamanho,10)
-        self.pos_y=randrange(0,altura-tamanho-placar,10)
+        self.pos_x=randrange(0,largura-tamanho,20)
+        self.pos_y=randrange(0,altura-tamanho-placar,20)
         
         self.velocidade_x=0
         self.velocidade_y=0
@@ -160,6 +169,7 @@ class Jogo:
     ''' Método iniciar, possui o loop principal do jogo,
     que faz absolutamente tudo que acontece no jogo '''
     def iniciar(self):
+        pontos_fundo = 0
         while self.jogando:
 
             ''' Iterador de eventos, todos os eventos que
@@ -181,14 +191,22 @@ class Jogo:
                     if event.key == pygame.K_DOWN and self.cobra.direcao != "cima":
                         self.cobra.direcao = "baixo"
                     if event.key == pygame.K_SPACE:
+                        self.pontos += 1
+                        pontos_fundo += 1
                         self.cobra.cresce()
 
             ''' Checa se o jogador ainda não perdeu o jogo '''
             if self.jogando:
 
                 ''' Limpa a tela a cada novo inicio de loop '''
-                fundo.fill(branco)
-                
+                if pontos_fundo == 10:
+                    pontos_fundo = 0
+                    if self.fundo == branco:
+                        self.fundo = preto
+                    else:
+                        self.fundo = branco
+                    
+                fundo.fill(self.fundo)
                 ''' Checa para qual direção a cobra está seguindo e 
                 redefine a nova posição naquela direção '''
                 if self.cobra.direcao == "cima":
@@ -209,35 +227,38 @@ class Jogo:
                     self.maca.reposicionar()
                     self.cobra.cresce()
                     self.pontos += 1
+                    pontos_fundo += 1
 
-                # if self.pos_x + tamanho > largura:
-                #     self.pos_x = 0
-                # if self.pos_x < 0:
-                #     self.pos_x=largura-tamanho
-                # if self.pos_y + tamanho > altura-placar:
-                #     self.pos_y = 0
-                # if self.pos_y < 0:
-                #     self.pos_y= altura-tamanho-placar
 
                 ''' Checa se a cobra ultrapassou alguma das bordas,
                 caso tenha ultrapassado é definido que não se está
                 mais jogando porque perdeu e é chamado o método "perdido" '''
-                if self.pos_x + tamanho > largura:
-                    self.jogando = False
-                    self.perdeu = True
-                    self.perdido()
-                if self.pos_x < 0:
-                    self.jogando = False
-                    self.perdeu = True
-                    self.perdido()
-                if self.pos_y + tamanho > altura:
-                    self.jogando = False
-                    self.perdeu = True
-                    self.perdido()
-                if self.pos_y < 0:
-                    self.jogando = False
-                    self.perdeu = True
-                    self.perdido()
+                if self.modo == "livre" :
+                    if self.pos_x + tamanho > largura:
+                        self.pos_x = 0
+                    if self.pos_x < 0:
+                        self.pos_x=largura-tamanho
+                    if self.pos_y + tamanho > altura-placar:
+                        self.pos_y = 0
+                    if self.pos_y < 0:
+                        self.pos_y= altura-tamanho-placar
+                else:
+                    if self.pos_x + tamanho > largura:
+                        self.jogando = False
+                        self.perdeu = True
+                        self.perdido()
+                    if self.pos_x < 0:
+                        self.jogando = False
+                        self.perdeu = True
+                        self.perdido()
+                    if self.pos_y + tamanho > altura:
+                        self.jogando = False
+                        self.perdeu = True
+                        self.perdido()
+                    if self.pos_y < 0:
+                        self.jogando = False
+                        self.perdeu = True
+                        self.perdido()
 
                 ''' Move a cobra para a nova posição que é 
                 definida como parâmetro do método '''
@@ -293,47 +314,119 @@ class Jogo:
                     self.jogando = False
                     self.perdeu = False
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_c:
-                        self.jogando = True
+                    if event.key == pygame.K_ESCAPE:
+                        self.jogando = False
                         self.perdeu = False
-                        self.pos_x=randrange(0,largura-tamanho,10)
-                        self.pos_y=randrange(0,altura-tamanho-placar,10)
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    mouse_pos = pygame.mouse.get_pos()
+                    mouse_x = mouse_pos[0]
+                    mouse_y = mouse_pos[1]
+                    if(mouse_x > 143 and mouse_y > 168 and mouse_x < 143+369 and mouse_y < 168+51):
+                        self.jogando = False
+                        self.perdeu = False
+                        self.noMenu = True
+                        self.pos_x=randrange(0,largura-tamanho,20)
+                        self.pos_y=randrange(0,altura-tamanho-placar,20)
                         self.cobra.direcao = ""
                         self.maca.reposicionar()
                         self.cobra.reinicia(self.pos_x, self.pos_y)
                         self.velocidade_x=0
                         self.velocidade_y=0
                         self.pontos = 0
-                    if event.key == pygame.K_s:
-                        self.jogando = False
+                    if(mouse_x > 193 and mouse_y > 268 and mouse_x < 193+279 and mouse_y < 268+58):
+                        self.jogando = True
                         self.perdeu = False
+                        self.pos_x=randrange(0,largura-tamanho,20)
+                        self.pos_y=randrange(0,altura-tamanho-placar,20)
+                        self.cobra.direcao = ""
+                        self.maca.reposicionar()
+                        self.cobra.reinicia(self.pos_x, self.pos_y)
+                        self.velocidade_x=0
+                        self.velocidade_y=0
+                        self.pontos = 0
             
             ''' Limpa a tela '''
             fundo.fill(branco)
 
             ''' Desenha "Fim de jogo" na tela '''
-            textoPerdeuSombra = Texto("Fim de jogo", cinza, 50)
-            textoPerdeuSombra.show(64, 29)
-            textoPerdeu = Texto("Fim de jogo", laranja, 50)
-            textoPerdeu.show(65, 30)
+            textoPerdeuSombra = Texto("Você Perdeu", cinza, 80)
+            textoPerdeuSombra.show(159, 29)
+            textoPerdeu = Texto("Você Perdeu", vermelho, 80)
+            textoPerdeu.show(160, 30)
 
             ''' Desenha a pontuação final do jogador '''
-            textoPontuacaoSombra = Texto("Pontuação Final: "+str(self.pontos), cinzaClaro, 30)
-            textoPontuacaoSombra.show(69, 79)
-            textoPontuacao = Texto("Pontuação Final: "+str(self.pontos), preto, 30)
-            textoPontuacao.show(70, 80)
+            textoPontuacaoSombra = Texto("Pontuação Final: "+str(self.pontos), cinza, 50)
+            textoPontuacaoSombra.show(179, 99)
+            textoPontuacao = Texto("Pontuação Final: "+str(self.pontos), prata, 50)
+            textoPontuacao.show(180, 100)
 
             ''' Desenha o botão de continuar jogando '''
-            pygame.draw.rect(fundo, prata, [43, 118, 139, 31])
-            pygame.draw.rect(fundo, preto, [45, 120, 135, 27])
-            textoContinuar = Texto("Continuar(C)", branco, 30)
-            textoContinuar.show(50, 125)
+            pygame.draw.rect(fundo, prata, [143, 168, 369, 51])
+            pygame.draw.rect(fundo, preto, [145, 170, 365, 47])
+            textoContinuar = Texto("Voltar ao Menu", branco, 70)
+            textoContinuar.show(150, 173)
 
-            ''' Desenha o botão de sair do jogo '''
-            pygame.draw.rect(fundo, prata, [188, 118, 79, 31])
-            pygame.draw.rect(fundo, preto, [190, 120, 75, 27])
-            textoSair = Texto("Sair(S)", branco, 30)
-            textoSair.show(195, 125)
+            ''' Desenha o botão de continuar jogando '''
+            pygame.draw.rect(fundo, prata, [193, 268, 279, 58])
+            pygame.draw.rect(fundo, preto, [195, 270, 275, 54])
+            textoContinuar = Texto("Novo Jogo", branco, 70)
+            textoContinuar.show(210, 273)
+
+            ''' Atualiza a tela com todos os elementos '''
+            pygame.display.update()
+        return 0
+
+    def menu(self):
+        while self.noMenu:
+
+            ''' Iterador de eventos, todos os eventos que
+            acontecem durante o tempo de execução estão podem
+            ser obtidos pelo "pygame.event.get()", é verificado
+            se o jogador quis sair do jogo ou quer voltar a jogar,
+            caso queira voltar, todo o jogo é redefinido e se retorna
+            para o método iniciar '''
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.noMenu = False
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        self.noMenu = False
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    mouse_pos = pygame.mouse.get_pos()
+                    mouse_x = mouse_pos[0]
+                    mouse_y = mouse_pos[1]
+                    if(mouse_x > 143 and mouse_y > 168 and mouse_x < 143+359 and mouse_y < 168+51):
+                        self.jogando = True
+                        self.perdeu = False
+                        self.noMenu = False
+                        self.modo = "classico"
+                        self.iniciar()
+                    if(mouse_x > 183 and mouse_y > 268 and mouse_x < 183+279 and mouse_y < 268+51):
+                        self.jogando = True
+                        self.noMenu = False
+                        self.perdeu = False
+                        self.modo = "livre"
+                        self.iniciar()
+            ''' Limpa a tela '''
+            fundo.fill(branco)
+
+            ''' Desenha o titulo "Snake Game" na tela '''
+            textoPerdeuSombra = Texto("Snake Game", cinza, 100)
+            textoPerdeuSombra.show(108, 28)
+            textoPerdeu = Texto("Snake Game", preto, 100)
+            textoPerdeu.show(110, 30)
+
+            ''' Desenha o botão de continuar jogando '''
+            pygame.draw.rect(fundo, prata, [143, 168, 359, 51])
+            pygame.draw.rect(fundo, preto, [145, 170, 355, 47])
+            textoContinuar = Texto("Modo Clássico", branco, 70)
+            textoContinuar.show(150, 173)
+
+            ''' Desenha o botão de continuar jogando '''
+            pygame.draw.rect(fundo, prata, [183, 268, 279, 51])
+            pygame.draw.rect(fundo, preto, [185, 270, 275, 47])
+            textoContinuar = Texto("Modo Livre", branco, 70)
+            textoContinuar.show(190, 273)
 
             ''' Atualiza a tela com todos os elementos '''
             pygame.display.update()
@@ -343,7 +436,7 @@ class Jogo:
 instancia = Jogo()
 
 ''' Iniciando o jogo através da instância '''
-instancia.iniciar()
+instancia.menu()
 
 ''' Fecha a janela principal do jogo '''
 pygame.quit()
