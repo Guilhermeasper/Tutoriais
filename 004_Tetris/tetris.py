@@ -22,7 +22,10 @@ blue_block = pygame.transform.scale(pygame.image.load(os.path.join(image_path, '
 
 true = True
 
-i = [1, 1, 1, 1]
+i = [[0, 1],
+     [0, 1],
+     [0, 1],
+     [0, 1]]
 j = [[0, 1],
      [0, 1],
      [1, 1]]
@@ -91,21 +94,34 @@ piece = [[]]
 
 def turn(p):
     turned_piece = []
-    try:
-        for j in range(len(p[0]) - 1, -1, -1):
-            temp = []
-            for i in range(len(p)):
-                temp.append(p[i][j])
-            turned_piece.append(temp)
-    except:
-        for item in p:
-            temp = [item]
-            turned_piece.append(temp)
+    for j in range(len(p[0]) - 1, -1, -1):
+        temp = []
+        for i in range(len(p)):
+            temp.append(p[i][j])
+        turned_piece.append(temp)
     return turned_piece
 
 
+pygame.time.set_timer(pygame.USEREVENT + 1, 500)
+tetris = Tetrimino()
 while true:
     for event in pygame.event.get():
+        if event.type == pygame.USEREVENT + 1:
+            pos = tetris.y + 1
+            for i in range(len(piece)):
+                for j in range(len(piece[i])):
+                    if piece[i][j] + grid[pos + i][tetris.x + j] > 1:
+                        pos = tetris.y
+            if pos == tetris.y:
+                for i in range(len(piece)):
+                    for j in range(len(piece[i])):
+                        if piece[i][j] == 1:
+                            grid[tetris.y + i][tetris.x + j] = 1
+                tetris = Tetrimino()
+                piece = tetris.piece
+            else:
+                tetris.y = pos
+
         if event.type == pygame.QUIT:
             true = False
             break
@@ -117,6 +133,19 @@ while true:
                 print(tetris.piece)
             if event.key == pygame.K_UP:
                 piece = turn(piece)
+            if event.key == pygame.K_LEFT:
+                tetris.x -= 1
+            if event.key == pygame.K_RIGHT:
+                tetris.x += 1
+            if event.key == pygame.K_a:
+                for j in range(16):
+                    for i in range(10):
+                        print(grid[j][i], end=" ")
+                    print("")
+                print("------------------------------------------------")
+                for i in range(len(piece)):
+                    for j in range(len(piece[i])):
+                        print(tetris.y+i, tetris.x+j)
 
     fundo.fill((0, 0, 0))
     for i in range(10):
@@ -124,17 +153,10 @@ while true:
             fundo.blit(black_block, (5 + i * 30, 5 + j * 30))
             if grid[j][i] == 1:
                 fundo.blit(blue_block, (5 + i * 30, 5 + j * 30))
-    index_i = 0
-    for line in piece:
-        index_j = 0
-        try:
-            for item in line:
-                if item == 1:
-                    fundo.blit(yellow_block, (5 + (index_j + 2) * 30, 5 + (index_i + 2) * 30))
-                index_j += 1
-        except:
-            fundo.blit(yellow_block, (5 + (index_j + 2) * 30, 5 + (index_i + 2) * 30))
-        index_i += 1
+    for i in range(len(piece)):
+        for j in range(len(piece[i])):
+            if piece[i][j] == 1:
+                fundo.blit(yellow_block, (5 + (tetris.x + j) * 30, 5 + (tetris.y + i) * 30))
 
     pygame.display.update()
     relogio.tick(5)
